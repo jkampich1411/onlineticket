@@ -1,0 +1,5 @@
+pycryptodome
+pyasn1
+
+# for download_keys.py
+requests

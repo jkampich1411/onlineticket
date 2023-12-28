@@ -1,0 +1,5 @@
+.venv/
+test-ticket.*
+parse_pdfs_jars/
+certs.csv
+__pycache__/
