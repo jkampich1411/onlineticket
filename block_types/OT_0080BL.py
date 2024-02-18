@@ -20,7 +20,7 @@ class OT_0080BL(DataBlock):
                 }[int(x[2])],
             }
 
-        ident = lambda x: x
+        ident = lambda x: x  # noqa: E731
 
         typen = {
             "001": ("Preismodell", ident),
@@ -57,11 +57,11 @@ class OT_0080BL(DataBlock):
         for i in range(res["data_count"]):
             assert self.read(1) == b"S"
             typ = self.read(3)
-            l = int(self.read(4))
-            dat = self.read(l)
+            length = int(self.read(4))
+            dat = self.read(length)
 
             typ, mod = typen.get(typ, (typ, ident))
-            dat = mod.get(dat, dat) if type(mod) == dict else mod(dat)
+            dat = mod.get(dat, dat) if isinstance(mod, dict) else mod(dat)
 
             ret[typ] = dat
         return ret

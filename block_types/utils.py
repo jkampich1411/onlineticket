@@ -1,12 +1,14 @@
 import datetime
 import struct
 
-date_parser = lambda x: datetime.datetime.strptime(x.decode("utf-8"), "%d%m%Y")
-german_date_parser = lambda x: datetime.datetime.strptime(x.decode("utf-8"), "%d.%m.%Y")
-datetime_parser = lambda x: datetime.datetime.strptime(x.decode("utf-8"), "%d%m%Y%H%M")
-vor_datetime_parser = lambda x: datetime.datetime.strptime(
-    x.decode("utf-8"), "%d.%m.%Y %H:%M"
-)
+def date_parser(x):
+    return datetime.datetime.strptime(x.decode("utf-8"), "%d%m%Y")
+def german_date_parser(x):
+    return datetime.datetime.strptime(x.decode("utf-8"), "%d.%m.%Y")
+def datetime_parser(x):
+    return datetime.datetime.strptime(x.decode("utf-8"), "%d%m%Y%H%M")
+def vor_datetime_parser(x):
+    return datetime.datetime.strptime(x.decode("utf-8"), "%d.%m.%Y %H:%M")
 
 
 def DateTimeCompact(data):

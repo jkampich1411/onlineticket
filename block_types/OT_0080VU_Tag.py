@@ -1,6 +1,6 @@
 from block_types.DataBlock import DataBlock
 
-from block_types.datatypes import *
+from block_types.datatypes import uint8, uint16
 
 
 class OT_0080VU_Tag(DataBlock):

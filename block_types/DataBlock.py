@@ -1,12 +1,11 @@
-dict_str = lambda d: "\n" + "\n".join(
-    ["%s:\t%s" % (k, str_func(v).replace("\n", "\n")) for k, v in d.items()]
-)
-list_str = lambda l: "\n" + "\n".join(
-    ["%d:\t%s" % (i, str_func(v).replace("\n", "\n")) for i, v in enumerate(l)]
-)
-str_func = lambda v: {dict: dict_str, list: list_str}.get(
-    type(v), str if isinstance(v, DataBlock) else repr
-)(v)
+def dict_str(d):
+    return "\n" + "\n".join(["%s:\t%s" % (k, str_func(v).replace("\n", "\n")) for k, v in d.items()])
+
+def list_str(le):
+    return "\n" + "\n".join(["%d:\t%s" % (i, str_func(v).replace("\n", "\n")) for i, v in enumerate(le)])
+
+def str_func(v):
+    return {dict: dict_str, list: list_str}.get(type(v), str if isinstance(v, DataBlock) else repr)(v)
 
 
 class DataBlock(object):
@@ -31,26 +30,26 @@ class DataBlock(object):
             dict_str(self.data).replace("\n", "\n\t"),
         )
 
-    def read(self, l):
-        res = self.stream[self.offset : self.offset + l]
-        self.offset += l
+    def read(self, length):
+        res = self.stream[self.offset : self.offset + length]
+        self.offset += length
         return res
 
     def dict_read(self, directory):
         res = {}
         for val in directory:
             key = val[0]
-            l = val[1]
-            if type(l) != int:
-                l = l(self, res)
-            dat = self.read(l)
+            length = val[1]
+            if not isinstance(length, int):
+                length = length(self, res)
+            dat = self.read(length)
             if len(val) > 2 and val[2] is not None:
-                if type(val[2]) == dict:
+                if isinstance(val[2], dict):
                     dat = val[2].get(dat, dat)
                 else:
                     try:
                         dat = val[2](dat)
-                    except Exception as e:
+                    except Exception:
                         print("Couldn't decode", val, repr(dat), self.__class__)
                         print(dict_str(res))
                         raise

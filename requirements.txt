@@ -1,5 +1,6 @@
 pycryptodome
 pyasn1
+pyyaml
 
 # for download_keys.py
 requests

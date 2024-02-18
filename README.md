@@ -1,6 +1,27 @@
-# Parser für Onlinetickets der Deutschen Bahn
+# Parser für Onlinetickets der Deutschen Bahn, (und anderer Anbieter!)
 
-Hintergrund: https://itooktheredpill.irgendwo.org/2010/onlinetickets-der-bahn/
+## Repository jetzt Library
+
+Nachdem ich dieses Skript ziemlich cool fand und ich sowieso
+eine Python3-Library für Onlinetickets gebraucht habe, habe ich
+dieses Skript in eine Library umgeschrieben und ein bisschen verschönert.
+
+(Man muss die "onlineticket.py" und "block_types/*" Dateien im Projekt haben, PIP Release ist immer noch ein TODO)
+
+Usage:
+
+```python
+from onlineticket import OT
+
+ticket_daten = "..."
+ticket = OT(ticket_daten)
+
+# Mach was mit den Daten!
+```
+
+## Hintergrund:
+
+https://itooktheredpill.irgendwo.org/2010/onlinetickets-der-bahn/
 
 ## Weitere Quellen
 

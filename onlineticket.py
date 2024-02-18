@@ -10,7 +10,7 @@ import os
 import zlib
 import sys
 
-from block_types import *
+from block_types import block_types, GenericBlock
 from block_types.DataBlock import DataBlock
 
 try:  # pip install pycryptodome
@@ -18,29 +18,12 @@ try:  # pip install pycryptodome
     from Crypto.PublicKey import DSA
     from Crypto.Signature import DSS
     from Crypto.Math.Numbers import Integer
-except:
-    try:
-        from Crypto.Hash import SHA
-
-        print(
-            "Please remove the deprecated python3-crypto package and install python3-pycryptodome instead.",
-            file=sys.stderr,
-        )
-        exit(1)
-    except:
-        print(
-            "Note: signature verification is disabled due to missing pycryptodome package.",
-            file=sys.stderr,
-        )
+except Exception:
     SHA1, DSA, DSS, Integer = None, None, None, None
 
 try:  # pip install pyasn1
     import pyasn1.codec.der.decoder as asn1
-except:
-    print(
-        "Note: signature verification is disabled due to missing pyasn1 package.",
-        file=sys.stderr,
-    )
+except Exception:
     asn1 = None
 
 # Core datatypes:
@@ -110,14 +93,14 @@ class OT(DataBlock):
     def signature_decode(self, res):
         """Parses the asn1 signature and extracts the (r,s) tuple."""
 
-        print(self.get_version())
-
         if not asn1:
             return None
         if self.get_version() == 1:
-            decoded = asn1.decode(self.read(50))[0]
+            x = self.read(50)
+            decoded = asn1.decode(x)[0]
         elif self.get_version() == 2:
-            decoded = asn1.decode(self.read(64))[0]
+            x = self.read(64)
+            decoded = asn1.decode(x)[0]
 
         return (int(decoded[0]), int(decoded[1]))
 
@@ -158,22 +141,12 @@ class OT(DataBlock):
 
 
 def read_block(data, offset):
-    block_types = {
-        b"U_HEAD": OT_U_HEAD,
-        b"U_TLAY": OT_U_TLAY,
-        b"RAWJSN": OT_RAWJSN,
-        b"0080BL": OT_0080BL,
-        b"0080ID": OT_0080ID,
-        b"0080VU": OT_0080VU,
-        b"1180AI": OT_1180AI,
-        b"3306FI": OT_3306FI,
-        b"3306VD": OT_3306VD,
-    }
     block_type = debug("block_type", data[offset : offset + 6], repr(data[offset:]))
     return block_types.get(block_type, GenericBlock)(data, offset)
 
 
-readot = lambda x: "".join([chr(int(i, 16)) for i in x.strip().split(" ")])
+def readot(x):
+    return "".join([chr(int(i, 16)) for i in x.strip().split(" ")])
 
 
 def read_blocks(data, read_func):
@@ -207,7 +180,7 @@ if __name__ == "__main__":
     for ticket in sys.argv[1:]:
         try:
             tickets = [readot(i) for i in open(ticket)]
-        except:
+        except Exception:
             content = open(ticket, "rb").read()
             tickets = [content]
         for binary_ticket in tickets:

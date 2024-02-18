@@ -1,7 +1,7 @@
 from block_types.DataBlock import DataBlock, dict_str
 from block_types.OT_0080VU_Tag import OT_0080VU_Tag
 
-from block_types.datatypes import *
+from block_types.datatypes import uint8, uint16, uint24, uint32
 from block_types.utils import DateTimeCompact
 
 
