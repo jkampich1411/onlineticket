@@ -3,6 +3,8 @@
 
 SCRIPTDIR=$(dirname $0)
 
+mkdir -p $SCRIPTDIR/parse_pdfs_jars
+
 # Download the binaries (if not yet existing)
 VERSION=3.3.1
 for lib in core javase; do
